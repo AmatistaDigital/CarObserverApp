@@ -1,1 +1,1 @@
-./gradlew installRelease;
+./gradlew assembleRelease;
