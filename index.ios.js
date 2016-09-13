@@ -172,5 +172,4 @@ class CarObserverApp extends Component {
     );
   }
 }
-
 AppRegistry.registerComponent('CarObserverApp', () => CarObserverApp);
