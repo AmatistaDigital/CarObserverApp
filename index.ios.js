@@ -71,9 +71,6 @@ class CarObserverApp extends Component {
       },
       (error) => {
         console.warn(error);
-      },
-      {
-        enableHighAccuracy : true,
       });
     const pubnub = new PubNub({
       ssl          : true,
