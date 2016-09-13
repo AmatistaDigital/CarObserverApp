@@ -1,0 +1,28 @@
+{
+  "name": "CarObserverApp",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "lint": "eslint index.android.js index.ios.js src/**",
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "rc-start": "npm start -- --reset-cache",
+    "clean": "rm -rf $TMPDIR/react-* && watchman watch-del-all && npm cache clean",
+    "reset-emulator-ios": "xcrun simctl erase all",
+    "clean-start": "npm run clean && npm run rc-start",
+    "fresh-install": "rm -rf $TMPDIR/react-* && watchman watch-del-all && rm -rf ios/build/ModuleCache/* && rm -rf node_modules/ && npm cache clean && npm install",
+    "fresh-start": "npm run fresh-install && npm run rc-start"
+  },
+  "dependencies": {
+    "lodash": "4.15.0",
+    "pubnub": "4.0.9",
+    "react": "15.3.1",
+    "react-native": "0.33.0",
+    "react-native-maps": "0.8.2"
+  },
+  "devDependencies": {
+    "babel-eslint": "6.1.2",
+    "eslint": "3.3.1",
+    "eslint-plugin-react": "6.1.2",
+    "eslint-plugin-react-native": "2.0.0"
+  }
+}
