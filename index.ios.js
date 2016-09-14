@@ -10,17 +10,20 @@ import {
   AppRegistry,
   StyleSheet,
   View,
+  Text,
+  Dimensions,
 } from 'react-native';
 import MapView from 'react-native-maps';
 const styles = StyleSheet.create({
-  container : {
+  statusContainer : {
+    height : Dimensions.get('window').height * 0.1,
+  },
+  mapContainer : {
     ...StyleSheet.absoluteFillObject,
-    height         : 400,
-    width          : 400,
     justifyContent : 'flex-end',
-    alignItems     : 'center',
   },
   map : {
+    height : Dimensions.get('window').height * 0.9,
     ...StyleSheet.absoluteFillObject,
   },
 });
@@ -48,7 +51,6 @@ class CarObserverApp extends Component {
     super();
     navigator.geolocation.watchPosition(
       ({ coords : {latitude, longitude}}) => {
-        console.warn('watchPosition');
         this.setState({
           person : {
             latitude,
@@ -60,7 +62,7 @@ class CarObserverApp extends Component {
           this.state.car.longitude,
           latitude,
           longitude,
-        ) * 0.621371) / 30;
+        ) * 0.621371) / 50;
         this.setState({
           person : {
             latitude,
@@ -78,27 +80,26 @@ class CarObserverApp extends Component {
       subscribeKey : 'sub-c-b507301c-216b-11e6-8b91-02ee2ddab7fe',
     });
     pubnub.subscribe({
-      channels : ['carobserver:position'],
-    });
-    pubnub.subscribe({
-      channels : ['carobserver:position'],
+      channels : ['carobserver:current-car-position'],
     });
     pubnub.addListener({
       message : (m) => {
         const delta = (getDistanceFromLatLonInKm(
           this.state.person.latitude,
           this.state.person.longitude,
-          m.message[0],
-          m.message[1],
-        ) * 0.621371) / 30;
+          m.message.latitude,
+          m.message.longitude,
+        ) * 0.621371) / 50;
         this.setState({
-          car : {
-            latitude  : m.message[0],
-            longitude : m.message[1],
+          date  : m.message.date,
+          speed : m.message.speed,
+          car   : {
+            latitude  : m.message.latitude,
+            longitude : m.message.longitude,
           },
           intermediate : {
-            latitude  : (this.state.person.latitude + m.message[0]) / 2,
-            longitude : (this.state.person.longitude + m.message[1]) / 2,
+            latitude  : (this.state.person.latitude + m.message.latitude) / 2,
+            longitude : (this.state.person.longitude + m.message.longitude) / 2,
           },
           delta,
         });
@@ -134,8 +135,7 @@ class CarObserverApp extends Component {
         this.state.person.longitude,
         this.state.car.latitude,
         this.state.car.longitude,
-      ) * 0.621371) / 30;
-      console.warn(delta);
+      ) * 0.621371) / 50;
       this.setState({
         intermediate : {
           latitude  : (this.state.person.latitude + this.state.car.latitude) / 2,
@@ -147,7 +147,10 @@ class CarObserverApp extends Component {
   }
   render () {
     return (
-      <View style ={styles.container}>
+      <View style={styles.mapContainer}>
+        <View style={styles.statusContainer}>
+          <Text>{this.state.date} {this.state.speed}</Text>
+        </View>
         <MapView style={styles.map} region={{
           ...this.state.intermediate,
           latitudeDelta  : this.state.delta,
