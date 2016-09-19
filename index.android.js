@@ -16,7 +16,8 @@ import {
 import MapView from 'react-native-maps';
 const styles = StyleSheet.create({
   statusContainer : {
-    height : Dimensions.get('window').height * 0.1,
+    height          : Dimensions.get('window').height * 0.1,
+    backgroundColor : 'red',
   },
   mapContainer : {
     ...StyleSheet.absoluteFillObject,
@@ -148,9 +149,6 @@ class CarObserverApp extends Component {
   render () {
     return (
       <View style={styles.mapContainer}>
-        <View style={styles.statusContainer}>
-          <Text>{this.state.date} {this.state.speed}</Text>
-        </View>
         <MapView style={styles.map} region={{
           ...this.state.intermediate,
           latitudeDelta  : this.state.delta,
@@ -171,6 +169,9 @@ class CarObserverApp extends Component {
             title="Int"
           />
         </MapView>
+        <View style={styles.statusContainer}>
+          <Text style={{height : 30}}>{this.state.date} {this.state.speed}</Text>
+        </View>
       </View>
     );
   }
